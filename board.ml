@@ -1,19 +1,28 @@
 type square = E | O
 type board = square Array.t Array.t
 
-let square_to_str = function
+let string_of_square = function
   | E -> "[_]"
   | O -> "[o]"
 
-let square_print s =
-  Printf.printf "%s" (square_to_str s)
+let string_of_row sep row =
+  Array.fold_left
+    (fun acc el -> acc ^ el)
+    sep 
+    (Array.map string_of_square row)
+
+let string_of_board b =
+  let s = Array.fold_left
+     (fun acc el -> acc ^ el)
+     ""
+     (Array.map 
+       (string_of_row "\n") 
+       b
+     ) in
+  s ^ "\n"
 
 let board_display b =
-  Array.iter 
-    (fun row ->
-      Array.iter square_print row;
-      Printf.printf "\n") 
-    b
+  Printf.printf "%s" (string_of_board b)
 
 (*
 let board_serialize b filename =
@@ -63,8 +72,7 @@ let make_test_board =
   mat
 
 let test_board_display =
-  let b = make_test_board in
-  board_display b
+  board_display make_test_board
 
 let () =
   test_board_display;
