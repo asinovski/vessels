@@ -42,6 +42,9 @@ let string_of_board b =
 let board_display b =
   Printf.printf "%s" (string_of_board b)
 
+(*
+ * TODO: refactor to use Out_channel
+ *)
 let board_serialize b filename =
   let oc = open_out filename in
   Printf.fprintf oc "%s" (string_of_board b);
@@ -71,13 +74,14 @@ let make_test_board =
   b
   
 let () =
+(*
   Printf.printf "%s\n" (string_of_row "" (row_of_string "[o][_][_]"));
 
   board_display make_test_board;
 
-  board_serialize (make_test_board) "test/test_board";
-
   Printf.printf "\n%s\n\n\n\n" (string_of_square (square_of_string "[o]"));
+*)
 
+  board_serialize (make_test_board) "test/test_board";
   let deserialized_test_board : board = board_deserialize "test/test_board" in
   board_display deserialized_test_board
