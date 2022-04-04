@@ -1,6 +1,4 @@
-(* 
 open Stdio
-*)
 
 type square = E | O
 type board = square Array.t Array.t
@@ -49,11 +47,12 @@ let board_serialize b filename =
   Printf.fprintf oc "%s" (string_of_board b);
   close_out oc
 
-(*
 let board_deserialize filename =
   let lines = In_channel.read_lines filename in
-  List.map 
-*)
+  Array.of_list
+    (List.map 
+      row_of_string
+      (List.filter (fun x -> String.length x > 0) lines))
 
 let make_test_board =
   let b : board =
@@ -74,11 +73,11 @@ let make_test_board =
 let () =
   Printf.printf "%s\n" (string_of_row "" (row_of_string "[o][_][_]"));
 
+  board_display make_test_board;
+
   board_serialize (make_test_board) "test/test_board";
 
-  Printf.printf "\n%s\n" (string_of_square (square_of_string "[o]"));
-(*
+  Printf.printf "\n%s\n\n\n\n" (string_of_square (square_of_string "[o]"));
+
   let deserialized_test_board : board = board_deserialize "test/test_board" in
   board_display deserialized_test_board
-*)
-  board_display make_test_board
