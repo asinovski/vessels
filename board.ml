@@ -57,6 +57,36 @@ let board_deserialize filename =
       row_of_string
       (List.filter (fun x -> String.length x > 0) lines))
 
+(*
+ * Does a ship of length l fit in the middle of the subboard (horizontally)?
+ * Use this function to enumerate potential positions for ships
+ *)
+let fit b l =
+  let rows = Array.length b in
+  if rows <> 3 
+  then 
+    false
+  else
+    let cols = Array.length b.(0) in
+    if cols <> l + 2 
+    then 
+      false
+    else
+      Array.for_all 
+        (fun row -> Array.for_all 
+                      (fun el -> el = E) 
+                      row) 
+        b
+
+let make_small_test_board =
+  let b : board =
+    [|
+      [|E;E;E;E;E;|];
+      [|E;E;E;E;E;|];
+      [|E;E;E;E;E;|];
+    |] in
+  b
+
 let make_test_board =
   let b : board =
     [|
@@ -72,8 +102,15 @@ let make_test_board =
       [|E;E;E;O;O;E;E;E;O;O|]
     |] in
   b
-  
+
 let () =
+  let small_b = make_small_test_board in
+  let flag = fit small_b 3 in
+  match flag with
+    | true -> Printf.printf "TRUE\n";
+    | false -> Printf.printf "FALSE\n";
+  ;
+
 (*
   Printf.printf "%s\n" (string_of_row "" (row_of_string "[o][_][_]"));
 
