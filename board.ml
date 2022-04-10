@@ -12,6 +12,29 @@ let square_of_string = function
   | "[o]" -> O
   | _     -> failwith "Unknown square value"
 
+let board_transpose b : board = 
+  let rows = Array.length b in
+  let empty : board = [| [||] |] in
+  match rows with
+    | 0 -> empty
+    | _ -> 
+        if Array.for_all
+          (fun r -> r = rows)
+          (Array.map Array.length b)
+        then
+          for i=0 to pred rows do
+            for j=0 to pred rows do
+              let tmp = b.(i).(j) in
+              b.(i).(j) <- b.(j).(i);
+              b.(j).(i) <- tmp;
+
+            done;
+          done;
+          b
+(*        else
+          empty
+*)
+
 let string_of_row sep row =
   Array.fold_left
     (fun acc el -> acc ^ el)
@@ -78,12 +101,21 @@ let fit b l =
                       row) 
         b
 
-let make_small_test_board =
+let make_small_test_rectangle =
   let b : board =
     [|
       [|E;E;E;E;E;|];
       [|E;E;E;E;E;|];
       [|E;E;E;E;E;|];
+    |] in
+  b
+
+let make_small_test_board =
+  let b : board =
+    [|
+      [|E;O;O;|];
+      [|E;E;O;|];
+      [|E;E;E;|];
     |] in
   b
 
@@ -104,7 +136,12 @@ let make_test_board =
   b
 
 let () =
+  let small_r = make_small_test_rectangle in
+  board_display (board_transpose small_r);
+
   let small_b = make_small_test_board in
+  board_display (board_transpose small_b);
+
   let flag = fit small_b 3 in
   match flag with
     | true -> Printf.printf "TRUE\n";
