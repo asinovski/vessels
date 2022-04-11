@@ -23,7 +23,7 @@ let board_transpose b : board =
           (Array.map Array.length b)
         then
           for i=0 to pred rows do
-            for j=0 to pred rows do
+            for j=i to pred rows do
               let tmp = b.(i).(j) in
               b.(i).(j) <- b.(j).(i);
               b.(j).(i) <- tmp;
@@ -140,7 +140,11 @@ let () =
   board_display (board_transpose small_r);
 
   let small_b = make_small_test_board in
+  board_display small_b;
   board_display (board_transpose small_b);
+
+  let t_b = board_transpose small_b in
+  board_display (board_transpose t_b);
 
   let flag = fit small_b 3 in
   match flag with
