@@ -14,26 +14,22 @@ let square_of_string = function
 
 let board_transpose b : board = 
   let rows = Array.length b in
-  let empty : board = [| [||] |] in
   match rows with
-    | 0 -> empty
+    | 0 -> failwith "Invalid board size"
     | _ -> 
         if Array.for_all
           (fun r -> r = rows)
           (Array.map Array.length b)
         then
+          let a = Array.make_matrix rows rows E in
           for i=0 to pred rows do
-            for j=i to pred rows do
-              let tmp = b.(i).(j) in
-              b.(i).(j) <- b.(j).(i);
-              b.(j).(i) <- tmp;
-
+            for j=0 to pred rows do
+              a.(i).(j) <- b.(j).(i);
             done;
           done;
-          b
-(*        else
-          empty
-*)
+          a
+        else
+          failwith "Invalid board size"
 
 let string_of_row sep row =
   Array.fold_left
@@ -101,6 +97,7 @@ let fit b l =
                       row) 
         b
 
+(*
 let make_small_test_rectangle =
   let b : board =
     [|
@@ -109,6 +106,7 @@ let make_small_test_rectangle =
       [|E;E;E;E;E;|];
     |] in
   b
+*)
 
 let make_small_test_board =
   let b : board =
@@ -136,13 +134,23 @@ let make_test_board =
   b
 
 let () =
+  (*
+  Printf.printf "Original rectangle";
   let small_r = make_small_test_rectangle in
-  board_display (board_transpose small_r);
+  board_display small_r;
 
+  Printf.printf "Transpose rectangle";
+  board_display (board_transpose small_r);
+  *)
+
+  Printf.printf "Original board";
   let small_b = make_small_test_board in
   board_display small_b;
+
+  Printf.printf "Transpose board";
   board_display (board_transpose small_b);
 
+  Printf.printf "Back to original board";
   let t_b = board_transpose small_b in
   board_display (board_transpose t_b);
 
