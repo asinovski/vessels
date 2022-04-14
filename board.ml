@@ -12,24 +12,35 @@ let square_of_string = function
   | "[o]" -> O
   | _     -> failwith "Unknown square value"
 
-let board_transpose b : board = 
+let board_valid b =
   let rows = Array.length b in
   match rows with
-    | 0 -> failwith "Invalid board size"
-    | _ -> 
-        if Array.for_all
+    | 0 -> false
+    | _ ->
+        Array.for_all
           (fun r -> r = rows)
           (Array.map Array.length b)
-        then
-          let a = Array.make_matrix rows rows E in
-          for i=0 to pred rows do
-            for j=0 to pred rows do
-              a.(i).(j) <- b.(j).(i);
-            done;
-          done;
-          a
-        else
-          failwith "Invalid board size"
+
+let board_transpose b : board =
+  if board_valid b
+  then
+    let rows = Array.length b in
+    let a = Array.copy b in
+    for i=0 to pred rows do
+      for j=0 to pred rows do
+        a.(i).(j) <- b.(j).(i);
+      done;
+    done;
+    a
+  else
+    failwith "Invalid board size"
+
+(*
+let board_vflip b : board =
+    if board_valid b
+    then
+      let rows = Array.length b in
+*)
 
 let string_of_row sep row =
   Array.fold_left
@@ -160,14 +171,13 @@ let () =
     | false -> Printf.printf "FALSE\n";
   ;
 
-(*
-  Printf.printf "%s\n" (string_of_row "" (row_of_string "[o][_][_]"));
-
-  board_display make_test_board;
-
-  Printf.printf "\n%s\n\n\n\n" (string_of_square (square_of_string "[o]"));
-*)
-
   board_serialize (make_test_board) "test/test_board";
   let deserialized_test_board : board = board_deserialize "test/test_board" in
-  board_display deserialized_test_board
+  board_display deserialized_test_board;
+(*
+  board_display (board_transpose deserialized_test_board);
+  board_display deserialized_test_board;
+  board_display small_b;
+  board_display (board_transpose small_b);
+  board_display small_b;
+*)
