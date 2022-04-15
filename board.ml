@@ -62,6 +62,13 @@ let board_vflip b : board =
     else
       failwith "Invalid board size"
 
+let board_hflip b : board =
+    if board_valid b
+    then
+      Array.map array_reverse b
+    else
+      failwith "Invalid board size"
+
 let string_of_row sep row =
   Array.fold_left
     (fun acc el -> acc ^ el)
@@ -177,5 +184,8 @@ let () =
   board_display deserialized_test_board;
 
   Printf.printf "vflip";
-  board_display (board_vflip deserialized_test_board);
+  board_display (board_vflip small_b);
+
+  Printf.printf "hflip";
+  board_display (board_hflip small_b);
 
