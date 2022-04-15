@@ -31,7 +31,6 @@ let board_copy b : board =
   else
     failwith "Invalid board size"
 
-
 let board_transpose b : board =
   if board_valid b
   then
@@ -46,12 +45,22 @@ let board_transpose b : board =
   else
     failwith "Invalid board size"
 
-(*
+let list_reverse l =
+  let rec list_reverse_acc l acc = 
+    match l with
+      | [] -> acc
+      | car :: cdr -> list_reverse_acc cdr (car :: acc) in
+  list_reverse_acc l []
+
+let array_reverse a = 
+  a |> Array.to_list |> list_reverse |> Array.of_list
+
 let board_vflip b : board =
     if board_valid b
     then
-      let rows = Array.length b in
-*)
+      array_reverse b
+    else
+      failwith "Invalid board size"
 
 let string_of_row sep row =
   Array.fold_left
@@ -166,4 +175,7 @@ let () =
   board_serialize (make_test_board) "test/test_board";
   let deserialized_test_board : board = board_deserialize "test/test_board" in
   board_display deserialized_test_board;
+
+  Printf.printf "vflip";
+  board_display (board_vflip deserialized_test_board);
 
