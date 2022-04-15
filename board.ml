@@ -21,11 +21,22 @@ let board_valid b =
           (fun r -> r = rows)
           (Array.map Array.length b)
 
+(* deep copy *)
+let board_copy b : board =
+  if board_valid b
+  then
+    Array.map
+      (fun r -> Array.copy r)
+      b
+  else
+    failwith "Invalid board size"
+
+
 let board_transpose b : board =
   if board_valid b
   then
     let rows = Array.length b in
-    let a = Array.copy b in
+    let a = board_copy b in
     for i=0 to pred rows do
       for j=0 to pred rows do
         a.(i).(j) <- b.(j).(i);
@@ -108,17 +119,6 @@ let fit b l =
                       row) 
         b
 
-(*
-let make_small_test_rectangle =
-  let b : board =
-    [|
-      [|E;E;E;E;E;|];
-      [|E;E;E;E;E;|];
-      [|E;E;E;E;E;|];
-    |] in
-  b
-*)
-
 let make_small_test_board =
   let b : board =
     [|
@@ -145,24 +145,16 @@ let make_test_board =
   b
 
 let () =
-  (*
-  Printf.printf "Original rectangle";
-  let small_r = make_small_test_rectangle in
-  board_display small_r;
-
-  Printf.printf "Transpose rectangle";
-  board_display (board_transpose small_r);
-  *)
 
   Printf.printf "Original board";
   let small_b = make_small_test_board in
   board_display small_b;
 
   Printf.printf "Transpose board";
-  board_display (board_transpose small_b);
+  let t_b = board_transpose small_b in
+  board_display t_b;
 
   Printf.printf "Back to original board";
-  let t_b = board_transpose small_b in
   board_display (board_transpose t_b);
 
   let flag = fit small_b 3 in
@@ -174,10 +166,4 @@ let () =
   board_serialize (make_test_board) "test/test_board";
   let deserialized_test_board : board = board_deserialize "test/test_board" in
   board_display deserialized_test_board;
-(*
-  board_display (board_transpose deserialized_test_board);
-  board_display deserialized_test_board;
-  board_display small_b;
-  board_display (board_transpose small_b);
-  board_display small_b;
-*)
+
