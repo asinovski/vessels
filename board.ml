@@ -12,6 +12,9 @@ let square_of_string = function
   | "[o]" -> O
   | _     -> failwith "Unknown square value"
 
+(*
+ *  Valid board size is N x N where N > 0
+ *)
 let board_valid b =
   let rows = Array.length b in
   match rows with
@@ -21,7 +24,9 @@ let board_valid b =
           (fun r -> r = rows)
           (Array.map Array.length b)
 
-(* deep copy *)
+(* 
+ * Deep copy the board
+ *)
 let board_copy b : board =
   if board_valid b
   then
@@ -31,6 +36,9 @@ let board_copy b : board =
   else
     failwith "Invalid board size"
 
+(*
+ * Return a transposed copy of the board 
+ *)
 let board_transpose b : board =
   if board_valid b
   then
