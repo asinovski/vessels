@@ -143,11 +143,16 @@ let fit b l =
                       row) 
         b
 
+(*
+ * Enumerate all possible positions for xxxx
+ * canonical: find the two highest density quadrants and make them 1 and 2
+ *)
+
 let make_small_test_board =
   let b : board =
     [|
-      [|E;O;O;|];
-      [|E;E;O;|];
+      [|O;E;E;|];
+      [|O;E;E;|];
       [|E;E;E;|];
     |] in
   b
@@ -167,6 +172,7 @@ let make_test_board =
       [|E;E;E;O;O;E;E;E;O;O|]
     |] in
   b
+
 
 let () =
 
@@ -191,9 +197,18 @@ let () =
   let deserialized_test_board : board = board_deserialize "test/test_board" in
   board_display deserialized_test_board;
 
-  Printf.printf "vflip";
-  board_display (board_vflip small_b);
+  let funcs_in_order = [(fun id -> id);
+                        board_vflip; 
+                        board_hflip; 
+                        (fun b -> (b |> board_vflip |> board_hflip));
 
-  Printf.printf "hflip";
-  board_display (board_hflip small_b);
+                        board_transpose;
+                        (fun b -> (b |> board_transpose |> board_vflip));
+                        (fun b -> (b |> board_transpose |> board_hflip));
+                        (fun b -> (b |> board_transpose |> board_vflip |> board_hflip));
+    ] in
 
+  let display_small_b =
+    List.map (fun f -> f small_b) funcs_in_order in
+
+  List.iter board_display display_small_b
